@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Codesmith Extension",
+  "version": "0.0.1",
+  "description": "This is a sample description",
+  "short_name": "Codesmith",
+  "permissions": ["activeTab", "declarativeContent", "storage", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["background.css"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "action": {
+    "default_title": "Does a thing when you do a thing",
+    "default_popup": "index.html",
+    "default_icon": {
+      "32": "icons/icon32.png"
+    }
+  }
+}
