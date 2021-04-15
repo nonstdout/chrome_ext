@@ -10,8 +10,9 @@ p {
 
 html {
   background: #fff;
-  font: normal 14px/24px futura, Helvetica, Arial, sans serif;
+  font: normal 11px/20px futura, Helvetica, Arial, sans serif;
   color: #999;
+  overflow-y: hidden;
 }
 
 strong {
@@ -23,28 +24,26 @@ a {
 
 html,
 body {
-  height: 100%;
+  height: 300;
 }
 
 #content {
-  height: 450px;
-  width: 500px;
+  min-height: 300;
   text-align: left;
   overflow: hidden;
 }
 
 #content-inner {
-  padding: 60px 0;
+  padding: 10px 0;
 }
 
 #piano {
   position: relative;
   margin: 0 auto;
-  padding: 80px 40px 16px;
-  height: 150px;
-  width: 400px;
+  padding: 50px 20px 25px;
+  width: 572px;
   background: #f33;
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: 0 1px 0 #999, 0 2px 0 #999, 0 3px 0 #999, 1px 4px 0 #999,
     2px 5px 0 #999, 3px 6px 0 #999, 4px 7px 0 #999, 5px 8px 0 #999, 0 0 8px #000;
   z-index: 2;
@@ -54,7 +53,7 @@ body {
 
 #piano .keys {
   /*width: 1144px;*/
-  width: 350px;
+  width: 571px;
   padding: 2px 0 0 2px;
   overflow: hidden;
   background: #000;
@@ -64,8 +63,8 @@ body {
 .key {
   float: left;
   position: relative;
-  width: 35px;
-  height: 90px;
+  width: 36px;
+  height: 120px;
   margin: 0 2px 2px 0;
   background: #fff;
   border-radius: 0 0 4px 4px;
@@ -87,7 +86,7 @@ body {
   left: -16px;
   display: block;
   width: 32px;
-  height: 117px;
+  height: 70px;
   background: #000;
   border-radius: 0 0 4px 4px;
   box-shadow: 1px 1px 0 #555, 2px 2px 0 #555;
@@ -108,7 +107,7 @@ body {
 /** header */
 
 h1 {
-  position: absolute;
+  position: relative;
   top: 25px;
   left: 40px;
   font-size: 16px;
