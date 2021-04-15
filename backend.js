@@ -89,6 +89,7 @@ app.post('/encrypt', function (req, res) {
 app.post('/decrypt', function (req, res) {
     res.send(decrypt(req.body))
     console.log(decrypt(req.body))
+    secretKey = '';
 })
 
 // will have to send the key to the backend as we are doing the encryption there.

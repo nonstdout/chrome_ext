@@ -713,7 +713,8 @@ function addListeners() {
     let backendUrl = "http://127.0.0.1:3001"
 
     // somewhere to store created password
-    let createdPassword = "";
+    // let createdPassword = "";
+    let createdPassword = [];
     // get pianokeys from the page
     const pianoKeys = document.querySelectorAll('.key');
     // loop over node list
@@ -722,7 +723,7 @@ function addListeners() {
         // add click event listener
         key.addEventListener('click', e => {
             // return target id.
-            createdPassword += e.target.id;
+            createdPassword.push(e.target.id)
             console.log(e)
             console.log(createdPassword)
         })
@@ -731,21 +732,37 @@ function addListeners() {
     // sends password to back end server and stores the response
     // might need to change to local storage
     const passKey = document.querySelector('#password')
-    passKey.addEventListener('click', e => {
-        if (e.target.id === 'password') {
-            const response = fetch(`${backendUrl}/sendpass`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain'
-                },
-                body: createdPassword
-            })
-            alert("Password stored!")
-            console.log("Password stored: ", createdPassword)
-            // clear password on front end
-            createdPassword = '';
-        }
-    })
+
+    function savePass() {
+        const response = fetch(`${backendUrl}/sendpass`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: createdPassword.slice(-6).join("")
+        })
+        // alert("Password stored!")
+        console.log("Password stored: ", createdPassword)
+        // clear password on front end
+        createdPassword = [];
+    }
+
+    // disabled passkey
+    // passKey.addEventListener('click', e => {
+    //     if (e.target.id === 'password') {
+    //         const response = fetch(`${backendUrl}/sendpass`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'text/plain'
+    //             },
+    //             body: createdPassword
+    //         })
+    //         // alert("Password stored!")
+    //         console.log("Password stored: ", createdPassword)
+    //         // clear password on front end
+    //         createdPassword = '';
+    //     }
+    // })
 
     // send message
     const message = document.querySelector('#message')
@@ -753,6 +770,7 @@ function addListeners() {
     const encryptButton = document.querySelector('#encrypt')
     encryptButton.addEventListener('click', e => {
         if (e.target.id === 'encrypt') {
+            savePass()
             fetch(`${backendUrl}/encrypt`, {
                 method: 'POST',
                 headers: {
@@ -769,6 +787,7 @@ function addListeners() {
     const decryptButton = document.querySelector('#decrypt')
     decryptButton.addEventListener('click', e => {
         if (e.target.id === 'decrypt') {
+            savePass()
             fetch(`${backendUrl}/decrypt`, {
                 method: 'POST',
                 headers: {
