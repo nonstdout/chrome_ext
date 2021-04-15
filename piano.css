@@ -24,11 +24,11 @@ a {
 
 html,
 body {
-  height: 300;
+  height: 230;
 }
 
 #content {
-  min-height: 300;
+  min-height: 230;
   text-align: left;
   overflow: hidden;
 }
@@ -40,7 +40,7 @@ body {
 #piano {
   position: relative;
   margin: 0 auto;
-  padding: 50px 20px 25px;
+  padding: 10px 20px 25px;
   width: 572px;
   background: #f33;
   border-radius: 10px;
@@ -54,7 +54,7 @@ body {
 #piano .keys {
   /*width: 1144px;*/
   width: 571px;
-  padding: 2px 0 0 2px;
+  padding: 12px 0 0 2px;
   overflow: hidden;
   background: #000;
   border-radius: 0 0 4px 4px;
@@ -108,8 +108,8 @@ body {
 
 h1 {
   position: relative;
-  top: 25px;
-  left: 40px;
+  top: 0px;
+  left: 10px;
   font-size: 16px;
   line-height: 20px;
   color: #fff;
@@ -224,8 +224,8 @@ h1 {
 
 #below {
   position: relative;
-  min-height: 100%;
-  border-top: 2px solid #222;
+  min-height: 50%;
+  border-top: 4px solid #222;
   background: #333;
   line-height: 20px;
   color: #eee;
@@ -274,8 +274,9 @@ h1 {
 #below-inner {
   margin: 0 auto;
   padding: 18px 0 20px;
-  width: 780px;
-  text-align: left;
+  width: 650px;
+  text-align: center;
+  align-content: center;
 }
 
 #below-inner h2 {
@@ -294,18 +295,4 @@ h1 {
 
 /* **/
 
-.note {
-  position: fixed;
-  top: 20%;
-  left: 30%;
-  width: 40%;
-  background: #111;
-  background: rgba(0, 0, 0, 0.85);
-  border-radius: 10px;
-  padding: 60px 0;
-  color: #fff;
-  font-size: 16px;
-  line-height: 20px;
-  text-align: center;
-  z-index: 999;
-}
+
