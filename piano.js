@@ -1,11 +1,10 @@
-
-
-
-(function() {
+(function () {
 
     //
     // Setup keys!
     //
+
+    var ids = ["c", "C", 'd', 'D', 'e', 'f', 'F', 'g', 'G', 'a', 'A', 'b', "c", "C", 'd', 'D', 'e', 'f', 'F', 'g', 'G', 'a', 'A', 'b', "c", "C",]
 
     var notesOffset = 0;
 
@@ -16,23 +15,25 @@
         8: 2,
         10: 3
     };
-    $.each(blackKeys, function(k, v) {
-        blackKeys[k] = ' black black'+v;;
+    $.each(blackKeys, function (k, v) {
+        blackKeys[k] = ' black black' + v;;
     });
 
     function blackKeyClass(i) {
         return blackKeys[(i % 12) + (i < 0 ? 12 : 0)] || '';
     }
 
-    var $keys = $('<div>', {'class': 'keys'}).appendTo('#piano');
+    var $keys = $('<div>', { 'class': 'keys' }).appendTo('#piano');
 
     var buildingPiano = false;
+
 
     var isIos = navigator.userAgent.match(/(iPhone|iPad)/i);
 
     function buildPiano() {
         if (buildingPiano) return;
         buildingPiano = true;
+        makingPiano = true;
 
         $keys.trigger('build-start.piano');
         $keys.empty().off('.play');
@@ -60,22 +61,23 @@
                 sounds[curSound].play();
                 curSound = ++curSound % sounds.length;
 
-                var $k = $keys.find('[data-key='+i+']').addClass('pressed');
+                var $k = $keys.find('[data-key=' + i + ']').addClass('pressed');
 
                 //TODO - it'd be nice to have a single event for triggering and reading
                 $keys.trigger('played-note.piano', [i, $k]);
 
                 // visual feedback
                 window.clearTimeout(pressedTimeout);
-                pressedTimeout = window.setTimeout(function() {
+                pressedTimeout = window.setTimeout(function () {
                     $k.removeClass('pressed');
                 }, 200);
             }
-            $keys.on('note-'+i+'.play', play);
+            $keys.on('note-' + i + '.play', play);
             var $key = $('<div>', {
                 'class': 'key' + blackKeyClass(i),
                 'data-key': i,
-                mousedown: function(evt) { $keys.trigger('note-'+i+'.play'); }
+                'id': ids.shift(),
+                mousedown: function (evt) { $keys.trigger('note-' + i + '.play'); }
             }).appendTo($keys);
         }
 
@@ -89,11 +91,13 @@
             } else {
                 buildingPiano = false;
                 $keys.trigger('build-done.piano');
+                addListeners()
             }
         })();
     }
 
     buildPiano();
+
 
 
     //
@@ -105,20 +109,20 @@
         return x.charAt(0).toUpperCase() + x.substring(1);
     }
 
-    $.each(['volume', 'style'], function(i, setting) {
+    $.each(['volume', 'style'], function (i, setting) {
         var $opts = $('<div>', {
             'class': 'opts',
             html: '<p><strong>' + camelToText(setting) + ':</strong></p>'
         }).appendTo('#synth-settings');
 
-        $.each(DataGenerator[setting], function(name, fn) {
+        $.each(DataGenerator[setting], function (name, fn) {
             if (name != 'default') {
                 $('<p>')
                     .append($('<a>', {
                         text: camelToText(name),
                         href: '#',
                         'class': fn === DataGenerator[setting].default ? 'selected' : '',
-                        click: function(evt) {
+                        click: function (evt) {
                             evt.preventDefault();
                             DataGenerator[setting].default = fn;
                             buildPiano();
@@ -167,27 +171,27 @@
         return evt.metaKey || evt.shiftKey || evt.altKey;
     }
 
-    $(window).keydown(function(evt) {
-        var keyCode = evt.keyCode;
-        // prevent repeating keys
-        if (!downKeys[keyCode] && !isModifierKey(evt)) {
-            downKeys[keyCode] = 1;
-            var key = keyNotes[keyCode];
-            if (typeof key != 'undefined') {
-                $keys.trigger('note-'+(key+notesShift+notesOffset)+'.play');
-                evt.preventDefault();
-            } else if (evt.keyCode == 188) {
-                notesShift = -12;
-            } else if (evt.keyCode == 190) {
-                notesShift = 0;
-            } else if (keyCode == 37 || keyCode == 39) {
-                notesOffset += (keyCode == 37 ? -1 : 1) * 12;
-                buildPiano();
-            }
-        }
-    }).keyup(function(evt) {
-        delete downKeys[evt.keyCode];
-    });
+    // $(window).keydown(function(evt) {
+    //     var keyCode = evt.keyCode;
+    //     // prevent repeating keys
+    //     if (!downKeys[keyCode] && !isModifierKey(evt)) {
+    //         downKeys[keyCode] = 1;
+    //         var key = keyNotes[keyCode];
+    //         if (typeof key != 'undefined') {
+    //             $keys.trigger('note-'+(key+notesShift+notesOffset)+'.play');
+    //             evt.preventDefault();
+    //         } else if (evt.keyCode == 188) {
+    //             notesShift = -12;
+    //         } else if (evt.keyCode == 190) {
+    //             notesShift = 0;
+    //         } else if (keyCode == 37 || keyCode == 39) {
+    //             notesOffset += (keyCode == 37 ? -1 : 1) * 12;
+    //             buildPiano();
+    //         }
+    //     }
+    // }).keyup(function(evt) {
+    //     delete downKeys[evt.keyCode];
+    // });
 
 
     //
@@ -213,7 +217,7 @@
 
     var $help = $('.help');
 
-    $(window).click(function(evt) {
+    $(window).click(function (evt) {
         var $closestHelp = $(evt.target).closest('.help');
         if (!((evt.target.nodeName == 'A' || ~evt.target.className.search('hold')) && $closestHelp.length) &&
             ($closestHelp.length || $help.hasClass('show'))) {
@@ -222,11 +226,11 @@
     });
 
     var qTimeout, qCanToggle = true;;
-    $(window).keypress(function(evt) {
+    $(window).keypress(function (evt) {
         // trigger help when ? is pressed, but make sure it doesn't repeat crazy
         if (evt.which == 63 || evt.which == 48) {
             window.clearTimeout(qTimeout);
-            qTimeout = window.setTimeout(function() {
+            qTimeout = window.setTimeout(function () {
                 qCanToggle = true;
             }, 1000);
             if (qCanToggle) {
@@ -236,12 +240,12 @@
         }
     });
 
-    window.setTimeout(function() {
+    window.setTimeout(function () {
         $help.removeClass('show');
     }, 700);
 
     // prevent quick find...
-    $(window).keydown(function(evt) {
+    $(window).keydown(function (evt) {
         if (evt.target.nodeName != 'INPUT' && evt.target.nodeName != 'TEXTAREA') {
             if (evt.keyCode == 222) {
                 evt.preventDefault();
@@ -254,8 +258,8 @@
     //
     // Scroll nav
     //
-    $.each([['#info', '#below'], ['#top', '#content']], function(i, x) {
-        $(x[0]).click(function() {
+    $.each([['#info', '#below'], ['#top', '#content']], function (i, x) {
+        $(x[0]).click(function () {
             $('html,body').animate({
                 scrollTop: $(x[1]).offset().top
             }, 1000);
@@ -266,8 +270,8 @@
     //
     // Demo
     //
-    (function(undefined) {
-        var chopsticks = (function() {
+    (function (undefined) {
+        var chopsticks = (function () {
             var data = [
                 {
                     'style': 'wave',
@@ -350,7 +354,7 @@
                 [6, -12, -8],
                 [6],
 
-                    [6, -8, 0],
+                [6, -8, 0],
                 [6, -8, 0],
                 [6]
             );
@@ -376,21 +380,21 @@
                 cfg.style && (DataGenerator.style.default = DataGenerator.style[cfg.style]);
                 cfg.volume && (DataGenerator.volume.default = DataGenerator.volume[cfg.volume]);
                 cfg.notesOffset !== undefined && (notesOffset = cfg.notesOffset);
-                $keys.one('build-done.piano', function() {
+                $keys.one('build-done.piano', function () {
                     //NOTE - jQuery.map flattens arrays
-                    var i = 0, song = $.map(data, function(x, i) { return i == 0 ? null : [x]; });
+                    var i = 0, song = $.map(data, function (x, i) { return i == 0 ? null : [x]; });
                     (function play() {
                         if (!demoing) return;
                         if (i >= song.length) { i = 0; }
                         var part = song[i++];
                         if (part) {
                             var delay = part[0];
-                            demoingTimeout = window.setTimeout(function() {
+                            demoingTimeout = window.setTimeout(function () {
                                 demoing && play();
-                                for (var j=1, len=part.length; j<len; j++) {
-                                    $keys.trigger('note-'+(part[j]+notesOffset)+'.play');
+                                for (var j = 1, len = part.length; j < len; j++) {
+                                    $keys.trigger('note-' + (part[j] + notesOffset) + '.play');
                                 }
-                            }, delay*50);
+                            }, delay * 50);
                         }
                     })();
                 });
@@ -418,7 +422,7 @@
     //
     // Looper
     //
-    (function() {
+    (function () {
         var $looper = $('.loop'),
             recording = false,
             startTime,
@@ -427,9 +431,9 @@
             stopTimeout,
             loopInterval, loopTimeouts = [];
 
-        $keys.on('played-note.piano', function(evt, key) {
+        $keys.on('played-note.piano', function (evt, key) {
             if (recording) {
-                data.push({'key': key, 'time': new Date().getTime()});
+                data.push({ 'key': key, 'time': new Date().getTime() });
             }
         });
 
@@ -439,12 +443,12 @@
                 startTime = new Date().getTime();
                 recording = true;
                 window.clearTimeout(stopTimeout);
-                stopTimeout = window.setTimeout(recordStop, 60*1000); // 1 minute max?
+                stopTimeout = window.setTimeout(recordStop, 60 * 1000); // 1 minute max?
                 $looper.addClass('active');
 
                 // stop old loop
                 window.clearInterval(loopInterval);
-                $.each(loopTimeouts, function(i, x) { window.clearTimeout(x); });
+                $.each(loopTimeouts, function (i, x) { window.clearTimeout(x); });
             }
         }
         function recordStop() {
@@ -452,7 +456,7 @@
                 recording = false;
                 totalTime = new Date().getTime() - startTime;
                 window.clearTimeout(stopTimeout);
-                for (var i=0, len=data.length; i<len; i++) {
+                for (var i = 0, len = data.length; i < len; i++) {
                     data[i].time = data[i].time - startTime;
                 }
                 if (data.length) {
@@ -463,11 +467,11 @@
         }
 
         function playLoop(data, totalTime) {
-            loopInterval = window.setInterval(function() {
+            loopInterval = window.setInterval(function () {
                 loopTimeouts = [];
-                $.each(data, function(i, x) {
-                    loopTimeouts.push(window.setTimeout(function() {
-                        $keys.trigger('note-'+x.key+'.play');
+                $.each(data, function (i, x) {
+                    loopTimeouts.push(window.setTimeout(function () {
+                        $keys.trigger('note-' + x.key + '.play');
                     }, x.time));
                 });
             }, totalTime);
@@ -475,7 +479,7 @@
 
         $looper.mousedown(recordStart).mouseup(recordStop);
 
-        $(window).on('keydown keyup', function(evt) {
+        $(window).on('keydown keyup', function (evt) {
             if (evt.which == 57 && !isModifierKey(evt)) {
                 evt.type == 'keydown' ? recordStart() : recordStop();
             }
@@ -486,7 +490,7 @@
     //
     // Silly colors
     //
-    (function() {
+    (function () {
         var shouldAnimate = true,
             $piano = $('#piano'),
             W = $piano.width(),
@@ -496,19 +500,19 @@
                     position: 'absolute',
                     top: ($piano.offset().top + $piano.outerHeight() - 1) + 'px',
                     left: '50%',
-                    marginLeft: Math.floor(-W/2) + 'px', // need to figure this out...
+                    marginLeft: Math.floor(-W / 2) + 'px', // need to figure this out...
                     width: W,
                     height: H
                 }
             })
-            .attr('width', W)
-            .attr('height', H)
-            .prependTo('body'),
+                .attr('width', W)
+                .attr('height', H)
+                .prependTo('body'),
             canvas = $canvas.get(0),
             ctx = canvas.getContext('2d');
 
         function choice(x) {
-            return x[Math.floor(Math.random()*x.length)];
+            return x[Math.floor(Math.random() * x.length)];
         }
 
         function getData(note) {
@@ -516,7 +520,7 @@
             var volumeFn = DataGenerator.volume.default;
             var styleFn = DataGenerator.style.default;
             var maxI = sampleRate * secs;
-            for (var i=0; i<maxI; i++) {
+            for (var i = 0; i < maxI; i++) {
                 var sf = styleFn(freq, vol, i, sampleRate, secs, maxI);
                 data.push(volumeFn(
                     styleFn(freq, vol, i, sampleRate, secs, maxI),
@@ -528,20 +532,20 @@
         var keyToData = {},
             keyAnimCounts = {};
 
-        $keys.on('build-done.piano', function() {
-            $keys.find('.key').each(function() {
+        $keys.on('build-done.piano', function () {
+            $keys.find('.key').each(function () {
                 var key = $(this).data('key');
                 keyToData[key] = getData(key);
             });
         });
 
-        $keys.on('played-note.piano', function(evt, key, $elt) {
+        $keys.on('played-note.piano', function (evt, key, $elt) {
             if (!shouldAnimate) return;
 
             var eOffset = $elt.offset(),
                 eWidth = $elt.width(),
                 cOffset = $canvas.offset(),
-                startX = (eOffset.left + eWidth/2) - cOffset.left,
+                startX = (eOffset.left + eWidth / 2) - cOffset.left,
                 startY = 0,
                 endY = 200,
                 amplitude = 8,
@@ -575,9 +579,9 @@
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
                     var newMax = i + iPerStep, first = true;
-                    for (; i<=newMax; i++) {
+                    for (; i <= newMax; i++) {
                         startY += yIncrement;
-                        ctx[first ? 'moveTo' : 'lineTo'](startX + data[i]*amplitude, startY);
+                        ctx[first ? 'moveTo' : 'lineTo'](startX + data[i] * amplitude, startY);
                         first = false;
                         if (startY > H) return;
                     }
@@ -589,7 +593,7 @@
                 if (keyAnimCounts[key] == animCount && step >= cleanupStepDelay) {
                     var cleanupStep = step - cleanupStepDelay;
                     ctx.clearRect(startX - amplitude - 5, yPerStep * cleanupStep,
-                                  (amplitude + 5) * 2, yPerStep * (cleanupStep + 1));
+                        (amplitude + 5) * 2, yPerStep * (cleanupStep + 1));
                 }
 
                 if (++step < steps + cleanupStepDelay) {
@@ -612,9 +616,9 @@
                     cursor: 'pointer'
                 }
             })
-            .attr('width', bW)
-            .attr('height', bH)
-            .appendTo('#piano'),
+                .attr('width', bW)
+                .attr('height', bH)
+                .appendTo('#piano'),
             button = $button.get(0),
             bctx = button.getContext('2d'),
             coords = [
@@ -634,7 +638,7 @@
             bctx.fillStyle = shouldAnimate ? 'rgba(255,255,0,.75)' : 'rgba(0,0,0,.25)';
             bctx.clearRect(0, 0, bW, bH);
             bctx.beginPath();
-            for (var i=0; i<coordsLen; i++) {
+            for (var i = 0; i < coordsLen; i++) {
                 bctx[i == 0 ? 'moveTo' : 'lineTo'](coords[i][0], coords[i][1]);
             }
             bctx.closePath();
@@ -656,13 +660,13 @@
     })();
 
     if (isIos) {
-        $(function() {
+        $(function () {
             var $note = $('<div>', {
                 'class': 'note',
                 'text': 'Note: sound does not work on iOS, but you can still enjoy pretty wave forms!'
             }).appendTo('body');
 
-            window.setTimeout(function() {
+            window.setTimeout(function () {
                 $note.fadeOut();
             }, 6000);
         });
@@ -702,3 +706,80 @@
     // generateFilesForDL();
 
 })();
+
+function addListeners() {
+
+
+    let backendUrl = "http://127.0.0.1:3001"
+
+    // somewhere to store created password
+    let createdPassword = "";
+    // get pianokeys from the page
+    const pianoKeys = document.querySelectorAll('.key');
+    // loop over node list
+    for (let key of pianoKeys) {
+        console.log(key)
+        // add click event listener
+        key.addEventListener('click', e => {
+            // return target id.
+            createdPassword += e.target.id;
+            console.log(e)
+            console.log(createdPassword)
+        })
+    }
+    // store password
+    // sends password to back end server and stores the response
+    // might need to change to local storage
+    const passKey = document.querySelector('#password')
+    passKey.addEventListener('click', e => {
+        if (e.target.id === 'password') {
+            const response = fetch(`${backendUrl}/sendpass`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: createdPassword
+            })
+            alert("Password stored!")
+            console.log("Password stored: ", createdPassword)
+            // clear password on front end
+            createdPassword = '';
+        }
+    })
+
+    // send message
+    const message = document.querySelector('#message')
+
+    const encryptButton = document.querySelector('#encrypt')
+    encryptButton.addEventListener('click', e => {
+        if (e.target.id === 'encrypt') {
+            fetch(`${backendUrl}/encrypt`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: message.value
+            }).then(response => response.text())
+                .then(response => message.value = response)
+            console.log("message box text:", JSON.stringify(message.value))
+            // update message box with result of fetch
+        }
+    })
+
+    const decryptButton = document.querySelector('#decrypt')
+    decryptButton.addEventListener('click', e => {
+        if (e.target.id === 'decrypt') {
+            fetch(`${backendUrl}/decrypt`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: message.value
+            }).then(response => response.text())
+                .then(response => message.value = response)
+            console.log("message box text:", message.value)
+            // update message box with result of fetch
+            // { iv: '52f049eff003478e80d5b42d7596d355', content: 'f901014cbd82' }
+        }
+    })
+}
