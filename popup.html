@@ -1,23 +1,72 @@
+﻿<!DOCTYPE html>
 <html>
 
 <head>
-    <title>Meraki CLI</title>
+        <meta charset=utf-8>
+        <title>Password Piano - Chrome Extension</title>
+        <meta name="description" content="A synth piano synth that helps you storing passwords" />
+        <link rel="stylesheet" type="text/css" href="piano.css" />
 </head>
 
 <body>
-    <img src="icons/icon32.png">
-    <h1>Meraki CLI Extension</h1>
-    <p>Here's all the stuff it can do:</p>
-    <ul>
-        <li>Push things</li>
-        <li>Pull Things</li>
-    </ul>
-    <button class="piano-key" id="A">KeyA</button>
-    <button class="piano-key" id="D">KeyD</button>
-    <button class="piano-key" id="C">KeyC#</button>
-    <button class="piano-key" id="B">KeyB</button>
-    <button class="piano-key" id="E">KeyE</button>
+        <div id="content">
+                <div id="content-inner">
+                        <div id="piano">
+                                <h1>Password Piano</h1>
+                                <div class="help show" tabindex="1">
+                                        <div class="help-inner">
+                                                <div id="synth-settings"></div>
+                                                <div class="opts">
+                                                        <p><strong>Controls:</strong></p>
+                                                        <p>play using home row &amp; above &nbsp; /</p>
+                                                        <p>change playable keys: “,” &amp; “.” &nbsp; /</p>
+                                                        <p>shift keyboard: ← &amp; → <span id="shift"></span></p>
+                                                </div>
+                                                <div class="opts">
+                                                        <p><strong>Extras:</strong></p>
+                                                        <p class="toggle-color toggle hold">Color - c &nbsp; /</p>
+                                                        <p class="toggle-demo toggle">Demo - m &nbsp; /</p>
+                                                        <p class="toggle-animate toggle">Visual mode - 8 &nbsp; /</p>
+                                                        <p class="toggle-looper">Looper - 9 &nbsp; /</p>
+                                                        <p>Help - 0</p>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div class="loop" tabindex="2">loop</div>
+                        </div>
+                </div>
+        </div>
+
+
+        <script src="jquery-1.7.1.min.js"></script>
+        <script src="audio.js"></script>
+        <script src="piano.js"></script>
+
 </body>
-<script src="popup.js"></script>
+
+</html>
+<p>shift keyboard: ← &amp; → <span id="shift"></span></p>
+</div>
+<div class="opts">
+        <p><strong>Extras:</strong></p>
+        <p class="toggle-color toggle hold">Color - c &nbsp; /</p>
+        <p class="toggle-demo toggle">Demo - m &nbsp; /</p>
+        <p class="toggle-animate toggle">Visual mode - 8 &nbsp; /</p>
+        <p class="toggle-looper">Looper - 9 &nbsp; /</p>
+        <p>Help - 0</p>
+</div>
+</div>
+</div>
+<div class="loop" tabindex="2">loop</div>
+</div>
+</div>
+</div>
+
+
+<script src="jquery-1.7.1.min.js"></script>
+<script src="audio.js"></script>
+<script src="piano.js"></script>
+
+</body>
 
 </html>
