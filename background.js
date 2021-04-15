@@ -1,7 +1,8 @@
-const button = document.querySelector(".btn");
+let color = '#3aa757';
 
-function log(message) {
-    console.alert(message);
-}
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.storage.sync.set({ color });
+    console.log('Default background color set to %cgreen', `color: ${color}`);
+});
 
-button.addEventListener("click", log, "clicked!!")
+console.log("serviceWorker")
