@@ -1,0 +1,22 @@
+{
+  "name": "chrome_ext",
+  "version": "1.0.0",
+  "description": "## Front-end",
+  "main": "backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nonstdout/chrome_ext.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nonstdout/chrome_ext/issues"
+  },
+  "homepage": "https://github.com/nonstdout/chrome_ext#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
